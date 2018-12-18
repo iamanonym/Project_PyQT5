@@ -121,6 +121,7 @@ class PasswordWindow(QMainWindow):
                 with open('Accounts/Accounts_list.txt', 'a') as file:
                     file.write('{} {}\n'.format(self.log, self.word))
                     file.close()
+                os.mkdir('{}/Accounts/{}'.format(os.getcwd(), self.log))
                 self.is_new = False
             self.result()
 
