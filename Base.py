@@ -95,9 +95,10 @@ class PasswordWindow(QMainWindow):
     def check(self, mode='s'):
         self.log = self.login.text()
         self.word = self.password.text()
+        print(mode)
         if mode == 'e' and self.log not in LOGINS:
             return 'Несуществующий логин'
-        elif mode == 'е' and LOGINS[self.log] != self.word:
+        elif mode == 'e' and LOGINS[self.log] != self.word:
             return 'Неверный пароль'
         elif len(self.log) < 8 or len(self.word) < 8:
             return 'Недостаточно символов'
@@ -111,7 +112,7 @@ class PasswordWindow(QMainWindow):
         if self.sender().text() == 'Вход':
             self.checking = self.check(mode='e')
         else:
-            self.checking = self.check(mode='')
+            self.checking = self.check()
             self.is_new = True
         if self.checking:
             self.comment.setText(self.checking)
