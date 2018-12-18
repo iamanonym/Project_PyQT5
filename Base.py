@@ -95,7 +95,6 @@ class PasswordWindow(QMainWindow):
     def check(self, mode='s'):
         self.log = self.login.text()
         self.word = self.password.text()
-        print(mode)
         if mode == 'e' and self.log not in LOGINS:
             return 'Несуществующий логин'
         elif mode == 'e' and LOGINS[self.log] != self.word:
