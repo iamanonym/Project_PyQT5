@@ -18,6 +18,25 @@ def count_mistakes(mistakes, letters):
     return round(mistakes / letters, 3)
 
 
+def get_info_from_file(file_name, ex):
+    x_es = [0]
+    y_es = [ex]
+    with open(file_name) as file:
+        temp = file.read().strip()
+        if not temp:
+            number = 0
+        else:
+            temp = temp.split('\n')
+            number = int(temp[-1].split()[0]) + 1
+            x_es = list(map(lambda x: int(x.split()[0]), temp)) + [number]
+            y_es = list(map(lambda y: float(y.split()[1]), temp)) + [ex]
+        file.close()
+    file_n = open(file_name, 'a')
+    file_n.write('{} {}\n'.format(number, ex))
+    file_n.close()
+    return x_es, y_es
+
+
 LOGINS = {x.split()[0]: x.split()[1]
           for x in open('Accounts/Accounts_list.txt').readlines()}
 
@@ -99,12 +118,19 @@ class PasswordWindow(QMainWindow):
             return 'Несуществующий логин'
         elif mode == 'e' and LOGINS[self.log] != self.word:
             return 'Неверный пароль'
+        elif mode == 's' and self.log in LOGINS:
+            return 'Логин уже существует'
         elif len(self.log) < 8 or len(self.word) < 8:
             return 'Недостаточно символов'
         elif self.word.isdigit() or self.word.isalpha():
             return 'Пароль состоит из символов одного вида'
+        elif set(self.log).intersection({',', '.', '!', '?', '/', '\\',
+                                         ';', '(', ')', '&', '[', ']',
+                                         '<', '>', '*', '|', ':', '"'}):
+            return 'Недопустимые символы в логине'
         elif set(self.word).intersection({',', '.', '!', '?', '/', '\\',
-                                          ';', '(', ')', '&', '[', ']'}):
+                                          ';', '(', ')', '&', '[', ']',
+                                          '<', '>', '*', '|', ':', '"'}):
             return 'Недопустимые символы в пароле'
 
     def signing(self):
@@ -117,24 +143,28 @@ class PasswordWindow(QMainWindow):
             self.comment.setText(self.checking)
             self.comment.adjustSize()
         else:
+            self.name = 'Accounts/{}'.format(self.log)
             if self.is_new:
                 with open('Accounts/Accounts_list.txt', 'a') as file:
                     file.write('{} {}\n'.format(self.log, self.word))
                     file.close()
-                os.mkdir('{}/Accounts/{}'.format(os.getcwd(), self.log))
+                self.file1 = open(self.name + '_ach.txt', 'w')
+                self.file1.close()
+                self.file2 = open(self.name + '_mist.txt', 'w')
+                self.file2.close()
                 self.is_new = False
             self.result()
 
     def result(self):
         self.app = QApplication(sys.argv)
-        self.bw = BaseWindow()
+        self.bw = BaseWindow(self.name)
         self.bw.show()
         self.app.exec_()
         self.close()
 
 
 class BaseWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, name):
         super().__init__()
         uic.loadUi('Base_design.ui', self)
         self.mode = None
@@ -146,6 +176,7 @@ class BaseWindow(QMainWindow):
         self.typing.currentIndexChanged.connect(self.change_type)
         self.name = None
         self.data = None
+        self.file_name = name
         self.sound_text = SOUND_WORDS
 
     def change_type(self, index):
@@ -184,13 +215,13 @@ class BaseWindow(QMainWindow):
                     self.data = file.read().strip()
                     file.close()
                 self.app_stand = QApplication(sys.argv)
-                self.standart = Standart(self.data)
+                self.standart = Standart(self.data, self.file_name)
                 self.standart.show()
                 self.app_stand.exec_()
                 self.close()
         elif self.mode == 'Режим слепой печати':
             self.app_sound = QApplication(sys.argv)
-            self.sound = Dictation(self.sound_text)
+            self.sound = Dictation(self.sound_text, self.file_name)
             self.sound.show()
             self.app_sound.exec_()
             self.close()
@@ -226,7 +257,7 @@ class Education(QMainWindow):
 
 
 class Standart(QMainWindow):
-    def __init__(self, text):
+    def __init__(self, text, name):
         super().__init__()
         uic.loadUi('Standart_design.ui', self)
         self.text = text
@@ -236,6 +267,7 @@ class Standart(QMainWindow):
         self.user_text = ''
         self.counter = 0
         self.mistakes = 0
+        self.file_name = name
 
     def keyPressEvent(self, event):
         if not self.begin:
@@ -260,14 +292,14 @@ class Standart(QMainWindow):
         self.mis_perc = count_mistakes(self.mistakes,
                                        len(self.text) + self.mistakes)
         self.res_app = QApplication(sys.argv)
-        self.res = Result(self.speed, self.mis_perc)
+        self.res = Result(self.speed, self.mis_perc, self.file_name)
         self.res.show()
         self.res_app.exec_()
         self.close()
 
 
 class Dictation(QMainWindow):
-    def __init__(self, text):
+    def __init__(self, text, name):
         super().__init__()
         uic.loadUi('Sound_design.ui', self)
         self.text = text
@@ -278,6 +310,7 @@ class Dictation(QMainWindow):
         self.end = None
         self.mistakes = 0
         self.user_text = ''
+        self.file_name = name
 
     def keyPressEvent(self, event):
         if event.key() == Core.Qt.Key_PageUp:
@@ -319,14 +352,14 @@ class Dictation(QMainWindow):
                                        len(' '.join(self.text)) +
                                        self.mistakes)
         self.res_app = QApplication(sys.argv)
-        self.res = Result(self.speed, self.mis_perc)
+        self.res = Result(self.speed, self.mis_perc, self.file_name)
         self.res.show()
         self.res_app.exec_()
         self.close()
 
 
 class Result(QMainWindow):
-    def __init__(self, speed, mistake):
+    def __init__(self, speed, mistake, name):
         super().__init__()
         self.speed, self.mistake = speed, mistake
         self.corr = True
@@ -339,37 +372,12 @@ class Result(QMainWindow):
         self.res_greet3.setText('Процент ошибок: '
                                 '{}%'.format(round(mistake, 3)))
         self.res_greet3.adjustSize()
+        self.file_name = name
         try:
-            with open('Results/achievements.txt') as file:
-                self.temp = file.read().strip()
-                if not self.temp:
-                    self.number1 = 0
-                else:
-                    self.temp = self.temp.split('\n')
-                    self.number1 = int(self.temp[-1].split()[0]) + 1
-                    self.x_es1 = list(map(lambda x: int(x.split()[0]),
-                                          self.temp)) + [self.number1]
-                    self.y_es1 = list(map(lambda y: float(y.split()[1]),
-                                          self.temp)) + [self.speed]
-                self.file_n = open('Results/achievements.txt', 'a')
-                self.file_n.write('{} {}\n'.format(self.number1,
-                                                   self.speed))
-                self.file_n.close()
-            with open('Results/mistakes.txt') as file2:
-                self.temp2 = file2.read()
-                if not self.temp2:
-                    self.number2 = 0
-                else:
-                    self.temp2 = self.temp2.strip().split('\n')
-                    self.number2 = int(self.temp2[-1].split()[0]) + 1
-                    self.x_es2 = list(map(lambda x: int(x.split()[0]),
-                                          self.temp2)) + [self.number2]
-                    self.y_es2 = list(map(lambda y: float(y.split()[1]),
-                                          self.temp2)) + [self.mistake]
-                self.file_n2 = open('Results/mistakes.txt', 'a')
-                self.file_n2.write('{} {}\n'.format(self.number2,
-                                                    self.mistake))
-                self.file_n2.close()
+            self.x_es1, self.y_es1 = \
+                get_info_from_file(self.file_name + '_ach.txt', self.speed)
+            self.x_es2, self.y_es2 = \
+                get_info_from_file(self.file_name + '_mist.txt', self.mistake)
         except FileNotFoundError:
             self.corr = False
         except IndexError:
