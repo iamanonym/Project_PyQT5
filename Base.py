@@ -2,25 +2,27 @@ import sys
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFileDialog
 from PyQt5 import uic
 import PyQt5.QtCore as Core
+import random
+import winsound
 import simpleaudio
 import os
 from datetime import datetime
 import time
 
 
-def count_speed(letters, time1, time2):
+def count_speed(letters, time1, time2):  # Подсчёт скорости печати
     diff = time2 - time1
     sec_diff = diff.seconds / 60
     return letters // sec_diff
 
 
-def count_mistakes(mistakes, letters):
+def count_mistakes(mistakes, letters):  # Подсчёт процента ошибок
     return round(mistakes / letters, 3)
 
 
 def get_info_from_file(file_name, ex):
-    x_es = [0]
-    y_es = [ex]
+    x_es = []
+    y_es = []
     with open(file_name) as file:
         temp = file.read().strip()
         if not temp:
@@ -37,8 +39,13 @@ def get_info_from_file(file_name, ex):
     return x_es, y_es
 
 
-LOGINS = {x.split()[0]: x.split()[1]
-          for x in open('Accounts/Accounts_list.txt').readlines()}
+try:
+    LOGINS = {x.split()[0]: x.split()[1]
+              for x in open('Accounts/Accounts_list.txt').readlines()}
+except FileNotFoundError:
+    LOGINS = {}
+except IndexError:
+    LOGINS = {}
 
 LETTERS = \
     {'а': simpleaudio.WaveObject.from_wave_file('Keys/А.wav'),
@@ -109,34 +116,79 @@ LETTERS = \
      '6': simpleaudio.WaveObject.from_wave_file('Keys/6.wav'),
      '7': simpleaudio.WaveObject.from_wave_file('Keys/7.wav'),
      '8': simpleaudio.WaveObject.from_wave_file('Keys/8.wav'),
-     '9': simpleaudio.WaveObject.from_wave_file('Keys/9.wav'),}
+     '9': simpleaudio.WaveObject.from_wave_file('Keys/9.wav')}
 
 TEXTS = {10: 'Texts/10.txt', 20: 'Texts/20.txt', 30: 'Texts/30.txt',
          40: 'Texts/40.txt', 50: 'Texts/50.txt', 60: 'Texts/60.txt',
          70: 'Texts/70.txt', 80: 'Texts/80.txt', 90: 'Texts/90.txt'}
 
 SOUND_WORDS = \
-    {'сортировка': simpleaudio.WaveObject.from_wave_file('Sound/w0.wav'),
-     'библиотека': simpleaudio.WaveObject.from_wave_file('Sound/w1.wav'),
-     'директория': simpleaudio.WaveObject.from_wave_file('Sound/w2.wav'),
-     'трассировка': simpleaudio.WaveObject.from_wave_file('Sound/w3.wav'),
-     'архивирование': simpleaudio.WaveObject.from_wave_file('Sound/w4.wav'),
-     'репозиторий': simpleaudio.WaveObject.from_wave_file('Sound/w5.wav'),
-     'инвертор': simpleaudio.WaveObject.from_wave_file('Sound/w6.wav')}
+    [{'сортировка': simpleaudio.WaveObject.from_wave_file('Sound/w0.wav'),
+      'библиотека': simpleaudio.WaveObject.from_wave_file('Sound/w1.wav'),
+      'директория': simpleaudio.WaveObject.from_wave_file('Sound/w2.wav'),
+      'трассировка': simpleaudio.WaveObject.from_wave_file('Sound/w3.wav'),
+      'архивирование': simpleaudio.WaveObject.from_wave_file('Sound/w4.wav'),
+      'репозиторий': simpleaudio.WaveObject.from_wave_file('Sound/w5.wav'),
+      'инвертор': simpleaudio.WaveObject.from_wave_file('Sound/w6.wav')},
+     {'дизъюнктор': simpleaudio.WaveObject.from_wave_file('Sound/w7.wav'),
+      'юникод': simpleaudio.WaveObject.from_wave_file('Sound/w8.wav'),
+      'эквиваленция': simpleaudio.WaveObject.from_wave_file('Sound/w9.wav'),
+      'декоратор': simpleaudio.WaveObject.from_wave_file('Sound/w10.wav'),
+      'интервал': simpleaudio.WaveObject.from_wave_file('Sound/w11.wav'),
+      'множество': simpleaudio.WaveObject.from_wave_file('Sound/w12.wav'),
+      'основание': simpleaudio.WaveObject.from_wave_file('Sound/w13.wav')},
+     {'конъюнкция': simpleaudio.WaveObject.from_wave_file('Sound/w14.wav'),
+      'итератор': simpleaudio.WaveObject.from_wave_file('Sound/w15.wav'),
+      'атрибут': simpleaudio.WaveObject.from_wave_file('Sound/w16.wav'),
+      'базис': simpleaudio.WaveObject.from_wave_file('Sound/w17.wav'),
+      'унарный': simpleaudio.WaveObject.from_wave_file('Sound/w18.wav'),
+      'субъективность': simpleaudio.WaveObject.from_wave_file('Sound/'
+                                                              'w19.wav'),
+      'импликация': simpleaudio.WaveObject.from_wave_file('Sound/w20.wav')}]
 
 SOUND_COLLOCATIONS = \
-    {'командная строка':
-     simpleaudio.WaveObject.from_wave_file('Sound/c0.wav'),
-     'программное обеспечение':
-     simpleaudio.WaveObject.from_wave_file('Sound/c1.wav'),
-     'операционная система':
-     simpleaudio.WaveObject.from_wave_file('Sound/c2.wav'),
-     'система счисления':
-     simpleaudio.WaveObject.from_wave_file('Sound/c3.wav'),
-     'закон склеивания':
-     simpleaudio.WaveObject.from_wave_file('Sound/c4.wav'),
-     'графический интерфейс':
-     simpleaudio.WaveObject.from_wave_file('Sound/c5.wav')}
+    [{'командная строка':
+      simpleaudio.WaveObject.from_wave_file('Sound/c0.wav'),
+      'программное обеспечение':
+      simpleaudio.WaveObject.from_wave_file('Sound/c1.wav'),
+      'операционная система':
+      simpleaudio.WaveObject.from_wave_file('Sound/c2.wav'),
+      'система счисления':
+      simpleaudio.WaveObject.from_wave_file('Sound/c3.wav'),
+      'закон склеивания':
+      simpleaudio.WaveObject.from_wave_file('Sound/c4.wav'),
+      'графический интерфейс':
+      simpleaudio.WaveObject.from_wave_file('Sound/c5.wav')},
+     {'закон поглощения':
+      simpleaudio.WaveObject.from_wave_file('Sound/c6.wav'),
+      'алфавитный подход':
+      simpleaudio.WaveObject.from_wave_file('Sound/c7.wav'),
+      'таблица истинности':
+      simpleaudio.WaveObject.from_wave_file('Sound/c8.wav'),
+      'логический элемент':
+      simpleaudio.WaveObject.from_wave_file('Sound/c9.wav'),
+      'звуковая карта':
+      simpleaudio.WaveObject.from_wave_file('Sound/c10.wav'),
+      'локальная сеть':
+      simpleaudio.WaveObject.from_wave_file('Sound/c11.wav'),
+      'тернарный оператор':
+      simpleaudio.WaveObject.from_wave_file('Sound/c12.wav')}]
+
+SOUND_PROPOSALS = \
+    {'Для получения более точной информации в дополнение к органам'
+     ' чувств человек издавна использует различные устройства и приборы':
+     simpleaudio.WaveObject.from_wave_file('Sound/p0.wav'),
+     'Люди имеют дело с разными видами информации':
+     simpleaudio.WaveObject.from_wave_file('Sound/p1.wav'),
+     'Потребность человека выразить имеющуюся у него информацию '
+     'привела к появлению речи':
+     simpleaudio.WaveObject.from_wave_file('Sound/p2.wav'),
+     'Важную для себя информацию человек старается запомнить':
+     simpleaudio.WaveObject.from_wave_file('Sound/p3.wav'),
+     'Люди обдумывают полученную информацию':
+     simpleaudio.WaveObject.from_wave_file('Sound/p4.wav'),
+     'Человек получает информацию с помощью органов чувств':
+     simpleaudio.WaveObject.from_wave_file('Sound/p5.wav')}
 
 
 class PasswordWindow(QMainWindow):
@@ -213,10 +265,23 @@ class BaseWindow(QMainWindow):
         self.name = None
         self.data = None
         self.file_name = name
-        self.sound_text = SOUND_WORDS
+        self.sound_text = {key: LETTERS[key] for key in
+                           random.sample(list(LETTERS.keys())[0: 33], 10)}
 
     def change_type(self, index):
-        self.sound_text = SOUND_WORDS if not index else SOUND_COLLOCATIONS
+        if not index:
+            self.sound_text = {key: LETTERS[key] for key in
+                               random.sample(list(LETTERS.keys())[0: 33], 10)}
+        elif index == 1:
+            self.sound_text = \
+                {key: LETTERS[key] for key in
+                 random.sample(list(LETTERS.keys())[33: 59], 10)}
+        elif index == 2:
+            self.sound_text = SOUND_WORDS[random.randint(0, 2)]
+        elif index == 3:
+            self.sound_text = SOUND_COLLOCATIONS[random.randint(0, 1)]
+        elif index == 4:
+            self.sound_text = SOUND_PROPOSALS
 
     def set_mode(self):
         self.mode = self.sender().text()
@@ -250,11 +315,11 @@ class BaseWindow(QMainWindow):
                 with open(TEXTS[self.words]) as file:
                     self.data = file.read().strip()
                     file.close()
-                self.app_stand = QApplication(sys.argv)
-                self.standart = Standart(self.data, self.file_name)
-                self.standart.show()
-                self.app_stand.exec_()
-                self.close()
+            self.app_stand = QApplication(sys.argv)
+            self.standart = Standart(self.data, self.file_name)
+            self.standart.show()
+            self.app_stand.exec_()
+            self.close()
         elif self.mode == 'Режим слепой печати':
             self.app_sound = QApplication(sys.argv)
             self.sound = Dictation(self.sound_text, self.file_name)
@@ -263,18 +328,19 @@ class BaseWindow(QMainWindow):
             self.close()
         elif self.mode == 'Обучение':
             self.app_ed = QApplication(sys.argv)
-            self.edu = Education()
+            self.edu = Education(self.file_name)
             self.edu.show()
             self.app_ed.exec_()
             self.close()
 
 
 class Education(QMainWindow):
-    def __init__(self):
+    def __init__(self, name):
         super().__init__()
         uic.loadUi('Edu_design.ui', self)
         self.user_text = ''
         self.is_write = True
+        self.name = name
 
     def keyPressEvent(self, event):
         try:
@@ -285,8 +351,14 @@ class Education(QMainWindow):
         except KeyError:
             if event.key() == Core.Qt.Key_Space and self.is_write:
                 self.user_text += ' '
+            elif event.key() == Core.Qt.Key_Escape:
+                self.app = QApplication(sys.argv)
+                self.bw = BaseWindow(self.name)
+                self.bw.show()
+                self.app.exec_()
+                self.close()
         self.field.setText(self.user_text)
-        if len(self.user_text) == 800:
+        if len(self.user_text) >= 600:
             self.is_write = False
             self.comment.setText('Превышен лимит длины поля')
             self.comment.adjustSize()
@@ -317,6 +389,7 @@ class Standart(QMainWindow):
             self.counter += 1
         elif event.key() != Core.Qt.Key_Shift:
             self.mistakes += 1
+            winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
         self.field2.setText(self.user_text)
         if self.counter == len(self.text):
             self.end = datetime.now()
@@ -349,6 +422,9 @@ class Dictation(QMainWindow):
         self.file_name = name
 
     def keyPressEvent(self, event):
+        if self.symbol_counter == len(self.word) and \
+                        event.key() != Core.Qt.Key_PageUp:
+            return None
         if event.key() == Core.Qt.Key_PageUp:
             if not self.begin:
                 self.begin = datetime.now()
@@ -373,8 +449,9 @@ class Dictation(QMainWindow):
               event.key() == Core.Qt.Key_Space):
             self.user_text += ' '
             self.symbol_counter += 1
-        elif event.key() != Core.Qt.Key_Shift:
+        elif event.key() not in [Core.Qt.Key_Shift, Core.Qt.Key_Alt]:
             self.mistakes += 1
+            winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
         self.field.setText(self.user_text)
 
     def playing(self, music):
@@ -402,6 +479,7 @@ class Result(QMainWindow):
         self.x_es1, self.y_es1, self.x_es2, self.y_es2 = \
             None, None, None, None
         uic.loadUi('Res_design.ui', self)
+        self.back.clicked.connect(self.go_back)
         self.res_greet2.setText('Скорость печати: {} '
                                 'символов в минуту'.format(round(speed)))
         self.res_greet2.adjustSize()
@@ -439,6 +517,13 @@ class Result(QMainWindow):
             self.graph2 = Graph()
         self.graph2.show()
         self.graph_app2.exec_()
+
+    def go_back(self):
+        self.app = QApplication(sys.argv)
+        self.bw = BaseWindow(self.file_name)
+        self.bw.show()
+        self.app.exec_()
+        self.close()
 
 
 class Graph(QMainWindow):

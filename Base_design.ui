@@ -281,12 +281,27 @@
     </property>
     <item>
      <property name="text">
+      <string>Русские буквы</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Английские буквы</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
       <string>Слова</string>
      </property>
     </item>
     <item>
      <property name="text">
       <string>Словосочетания</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Предложения</string>
      </property>
     </item>
    </widget>

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>512</width>
-    <height>524</height>
+    <height>558</height>
    </rect>
   </property>
   <property name="font">
@@ -70,7 +70,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>80</y>
+      <y>100</y>
       <width>471</width>
       <height>371</height>
      </rect>
@@ -87,8 +87,8 @@
    <widget class="QLabel" name="comment">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>460</y>
+      <x>100</x>
+      <y>490</y>
       <width>47</width>
       <height>13</height>
      </rect>
@@ -101,6 +101,24 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>70</y>
+      <width>251</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Чтобы выйти, нажмите Ecsape</string>
     </property>
    </widget>
   </widget>
