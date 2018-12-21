@@ -20,7 +20,7 @@ def count_mistakes(mistakes, letters):  # Подсчёт процента оши
     return round(mistakes / letters, 3)
 
 
-def get_info_from_file(file_name, ex):
+def get_info_from_file(file_name, ex):  # Составление зависимости для графика
     x_es = []
     y_es = []
     with open(file_name) as file:
@@ -46,7 +46,7 @@ except FileNotFoundError:
     LOGINS = {}
 except IndexError:
     LOGINS = {}
-
+# Звуковой словарь клавиш
 LETTERS = \
     {'а': simpleaudio.WaveObject.from_wave_file('Keys/А.wav'),
      'б': simpleaudio.WaveObject.from_wave_file('Keys/Б.wav'),
@@ -117,11 +117,11 @@ LETTERS = \
      '7': simpleaudio.WaveObject.from_wave_file('Keys/7.wav'),
      '8': simpleaudio.WaveObject.from_wave_file('Keys/8.wav'),
      '9': simpleaudio.WaveObject.from_wave_file('Keys/9.wav')}
-
+# Словарь текстов
 TEXTS = {10: 'Texts/10.txt', 20: 'Texts/20.txt', 30: 'Texts/30.txt',
          40: 'Texts/40.txt', 50: 'Texts/50.txt', 60: 'Texts/60.txt',
          70: 'Texts/70.txt', 80: 'Texts/80.txt', 90: 'Texts/90.txt'}
-
+# Кейсы со словами
 SOUND_WORDS = \
     [{'сортировка': simpleaudio.WaveObject.from_wave_file('Sound/w0.wav'),
       'библиотека': simpleaudio.WaveObject.from_wave_file('Sound/w1.wav'),
@@ -145,7 +145,7 @@ SOUND_WORDS = \
       'субъективность': simpleaudio.WaveObject.from_wave_file('Sound/'
                                                               'w19.wav'),
       'импликация': simpleaudio.WaveObject.from_wave_file('Sound/w20.wav')}]
-
+# Кейсы со словосочетаниями
 SOUND_COLLOCATIONS = \
     [{'командная строка':
       simpleaudio.WaveObject.from_wave_file('Sound/c0.wav'),
@@ -173,7 +173,7 @@ SOUND_COLLOCATIONS = \
       simpleaudio.WaveObject.from_wave_file('Sound/c11.wav'),
       'тернарный оператор':
       simpleaudio.WaveObject.from_wave_file('Sound/c12.wav')}]
-
+# Словарь предложений
 SOUND_PROPOSALS = \
     {'Для получения более точной информации в дополнение к органам'
      ' чувств человек издавна использует различные устройства и приборы':
@@ -191,7 +191,7 @@ SOUND_PROPOSALS = \
      simpleaudio.WaveObject.from_wave_file('Sound/p5.wav')}
 
 
-class PasswordWindow(QMainWindow):
+class PasswordWindow(QMainWindow):  # Окно инициализации
     def __init__(self):
         super().__init__()
         uic.loadUi('Password_design.ui', self)
@@ -199,7 +199,7 @@ class PasswordWindow(QMainWindow):
         self.sign_up.clicked.connect(self.signing)
         self.is_new = False
 
-    def check(self, mode='s'):
+    def check(self, mode='s'):  # Проверка логина и пароля
         self.log = self.login.text()
         self.word = self.password.text()
         if mode == 'e' and self.log not in LOGINS:
@@ -239,7 +239,7 @@ class PasswordWindow(QMainWindow):
                 self.file1 = open(self.name + '_ach.txt', 'w')
                 self.file1.close()
                 self.file2 = open(self.name + '_mist.txt', 'w')
-                self.file2.close()
+                self.file2.close()  # Создаем персональные файлы для аккаунта
                 self.is_new = False
             self.result()
 
@@ -251,7 +251,7 @@ class PasswordWindow(QMainWindow):
         self.close()
 
 
-class BaseWindow(QMainWindow):
+class BaseWindow(QMainWindow):  # Основное окно
     def __init__(self, name):
         super().__init__()
         uic.loadUi('Base_design.ui', self)
@@ -268,7 +268,7 @@ class BaseWindow(QMainWindow):
         self.sound_text = {key: LETTERS[key] for key in
                            random.sample(list(LETTERS.keys())[0: 33], 10)}
 
-    def change_type(self, index):
+    def change_type(self, index):  # Отслеживаем переключатель
         if not index:
             self.sound_text = {key: LETTERS[key] for key in
                                random.sample(list(LETTERS.keys())[0: 33], 10)}
@@ -287,7 +287,7 @@ class BaseWindow(QMainWindow):
         self.mode = self.sender().text()
 
     def choosing(self):
-        self.filter = 'Texts (*.txt)'
+        self.filter = 'Texts (*.txt)'  # Открытие файлп вручную
         self.name, _ = QFileDialog.getOpenFileName(self, 'Открыть файл',
                                                    os.getcwd(), self.filter)
         if not self.name:
@@ -302,13 +302,13 @@ class BaseWindow(QMainWindow):
                 self.data = self.data[:800]
             file.close()
 
-    def start(self):
+    def start(self):  # Старт
         if not self.mode:
             return None
         elif self.mode == 'Стандартный':
             if not self.data:
                 self.words = self.counter.value()
-                if not self.words % 10 and self.words > 10:
+                if not self.words % 10 and self.words > 10:  # Округление
                     self.words = (self.words // 10) * 10
                 elif self.words > 10:
                     self.words = 10
@@ -334,7 +334,7 @@ class BaseWindow(QMainWindow):
             self.close()
 
 
-class Education(QMainWindow):
+class Education(QMainWindow):  # Обучение
     def __init__(self, name):
         super().__init__()
         uic.loadUi('Edu_design.ui', self)
@@ -344,27 +344,32 @@ class Education(QMainWindow):
 
     def keyPressEvent(self, event):
         try:
-            b = LETTERS[event.text().lower()].play()
+            b = LETTERS[event.text().lower()].play()  # Озвучка при нажатии
             b.wait_done()
             if self.is_write:
                 self.user_text += event.text()
         except KeyError:
             if event.key() == Core.Qt.Key_Space and self.is_write:
                 self.user_text += ' '
-            elif event.key() == Core.Qt.Key_Escape:
+            elif event.key() == Core.Qt.Key_Escape:  # Выход из режима
                 self.app = QApplication(sys.argv)
                 self.bw = BaseWindow(self.name)
                 self.bw.show()
                 self.app.exec_()
                 self.close()
+            elif event.key() == Core.Qt.Key_Backspace:
+                try:
+                    self.user_text = self.user_text[:-1]
+                except IndexError:
+                    pass
         self.field.setText(self.user_text)
-        if len(self.user_text) >= 600:
+        if len(self.user_text) >= 600:  # Лимитизация поля
             self.is_write = False
             self.comment.setText('Превышен лимит длины поля')
             self.comment.adjustSize()
 
 
-class Standart(QMainWindow):
+class Standart(QMainWindow):  # Стандартный
     def __init__(self, text, name):
         super().__init__()
         uic.loadUi('Standart_design.ui', self)
@@ -387,7 +392,7 @@ class Standart(QMainWindow):
               event.key() == Core.Qt.Key_Space):
             self.user_text += ' '
             self.counter += 1
-        elif event.key() != Core.Qt.Key_Shift:
+        elif event.key() != Core.Qt.Key_Shift:  # Отлов ошибок
             self.mistakes += 1
             winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
         self.field2.setText(self.user_text)
@@ -396,7 +401,7 @@ class Standart(QMainWindow):
             time.sleep(0.5)
             self.result()
 
-    def result(self):
+    def result(self):  # Выведение результата
         self.speed = count_speed(len(self.text), self.begin, self.end)
         self.mis_perc = count_mistakes(self.mistakes,
                                        len(self.text) + self.mistakes)
@@ -407,7 +412,7 @@ class Standart(QMainWindow):
         self.close()
 
 
-class Dictation(QMainWindow):
+class Dictation(QMainWindow):  # Режим слепой печати
     def __init__(self, text, name):
         super().__init__()
         uic.loadUi('Sound_design.ui', self)
@@ -429,7 +434,7 @@ class Dictation(QMainWindow):
             if not self.begin:
                 self.begin = datetime.now()
                 self.playing(self.text[self.word])
-            elif len(self.word) == self.symbol_counter:
+            elif len(self.word) == self.symbol_counter:  # Переход на новое слово
                 self.symbol_counter = 0
                 self.word_counter += 1
                 self.user_text = ''
@@ -439,7 +444,7 @@ class Dictation(QMainWindow):
                 except IndexError:
                     self.end = datetime.now()
                     self.result()
-            else:
+            else:  # Повторное воспроизведение
                 self.mistakes += 1
                 self.playing(self.text[self.word])
         elif event.text() == self.word[self.symbol_counter]:
@@ -454,11 +459,11 @@ class Dictation(QMainWindow):
             winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
         self.field.setText(self.user_text)
 
-    def playing(self, music):
+    def playing(self, music):  # Воспроизведение музыки
         self.player = music.play()
         self.player.wait_done()
 
-    def result(self):
+    def result(self):  # Подсчёт результата
         self.speed = count_speed(len(' '.join(self.text)),
                                  self.begin, self.end)
         self.mis_perc = count_mistakes(self.mistakes,
@@ -471,7 +476,7 @@ class Dictation(QMainWindow):
         self.close()
 
 
-class Result(QMainWindow):
+class Result(QMainWindow):  # Окно результата
     def __init__(self, speed, mistake, name):
         super().__init__()
         self.speed, self.mistake = speed, mistake
@@ -500,7 +505,7 @@ class Result(QMainWindow):
             self.stat_ach.clicked.connect(self.graph_ach)
             self.stat_mist.clicked.connect(self.graph_mist)
 
-    def graph_ach(self):
+    def graph_ach(self):  # График скорости печати
         self.graph_app = QApplication(sys.argv)
         if self.x_es1 and self.y_es1:
             self.graph = Graph(self.x_es1, self.y_es1)
@@ -509,7 +514,7 @@ class Result(QMainWindow):
         self.graph.show()
         self.graph_app.exec_()
 
-    def graph_mist(self):
+    def graph_mist(self):  # График процента ошибок
         self.graph_app2 = QApplication(sys.argv)
         if self.x_es2 and self.y_es2:
             self.graph2 = Graph(self.x_es2, self.y_es2)
@@ -518,7 +523,7 @@ class Result(QMainWindow):
         self.graph2.show()
         self.graph_app2.exec_()
 
-    def go_back(self):
+    def go_back(self):  # Выход из режима
         self.app = QApplication(sys.argv)
         self.bw = BaseWindow(self.file_name)
         self.bw.show()
@@ -531,7 +536,7 @@ class Graph(QMainWindow):
         super().__init__()
         uic.loadUi('Graph_maker_design.ui', self)
         if x_es and y_es:
-            self.graph.plot(x_es, y_es, pen='g')
+            self.graph.plot(x_es, y_es, pen='g')  # Построение графика
 
 
 if __name__ == '__main__':
