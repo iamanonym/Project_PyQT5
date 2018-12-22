@@ -434,7 +434,7 @@ class Dictation(QMainWindow):  # Режим слепой печати
             if not self.begin:
                 self.begin = datetime.now()
                 self.playing(self.text[self.word])
-            elif len(self.word) == self.symbol_counter:  # Переход на новое слово
+            elif len(self.word) == self.symbol_counter:  # Начать новое слово
                 self.symbol_counter = 0
                 self.word_counter += 1
                 self.user_text = ''
