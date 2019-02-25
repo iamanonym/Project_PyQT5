@@ -17,14 +17,14 @@
    <widget class="QLabel" name="greet">
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>280</x>
       <y>0</y>
-      <width>421</width>
+      <width>441</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 16pt, &quot;Times New Roman&quot;</string>
+     <string notr="true">font: 12pt, &quot;Times New Roman&quot;</string>
     </property>
     <property name="text">
      <string>Добро пожаловать в клавиатурный тренажёр!</string>
@@ -37,13 +37,22 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>60</y>
+      <y>70</y>
       <width>341</width>
       <height>31</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>,Times New Roman</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
     <property name="styleSheet">
-     <string notr="true">font: 16pt, &quot;Times New Roman&quot;</string>
+     <string notr="true">font: 12pt, &quot;Times New Roman&quot;</string>
     </property>
     <property name="text">
      <string>Просим Вас выбрать режим работы</string>
@@ -56,7 +65,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>100</y>
+      <y>110</y>
       <width>141</width>
       <height>31</height>
      </rect>
@@ -72,8 +81,8 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>140</y>
-      <width>141</width>
+      <y>150</y>
+      <width>171</width>
       <height>31</height>
      </rect>
     </property>
@@ -88,8 +97,8 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>190</y>
-      <width>211</width>
+      <y>200</y>
+      <width>261</width>
       <height>21</height>
      </rect>
     </property>
@@ -110,7 +119,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 14pt, &quot;Times New Roman&quot;;</string>
+     <string notr="true">font: 10pt, &quot;Times New Roman&quot;;</string>
     </property>
     <property name="text">
      <string>Просим Вас выбрать количество слов</string>
@@ -148,9 +157,9 @@
     <property name="geometry">
      <rect>
       <x>480</x>
-      <y>390</y>
+      <y>385</y>
       <width>311</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -193,12 +202,12 @@
      <rect>
       <x>410</x>
       <y>180</y>
-      <width>311</width>
+      <width>321</width>
       <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 14pt, &quot;Times New Roman&quot;;</string>
+     <string notr="true">font: 10pt, &quot;Times New Roman&quot;;</string>
     </property>
     <property name="text">
      <string>Или выбрать файл самостоятельно</string>
@@ -229,16 +238,16 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>420</x>
+      <x>390</x>
       <y>70</y>
-      <width>411</width>
-      <height>21</height>
+      <width>421</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Times New Roman</family>
-      <pointsize>14</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
@@ -248,7 +257,7 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>860</x>
+      <x>850</x>
       <y>70</y>
       <width>411</width>
       <height>21</height>
@@ -257,7 +266,7 @@
     <property name="font">
      <font>
       <family>Times New Roman</family>
-      <pointsize>14</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
@@ -267,7 +276,7 @@
    <widget class="QComboBox" name="typing">
     <property name="geometry">
      <rect>
-      <x>970</x>
+      <x>960</x>
       <y>140</y>
       <width>211</width>
       <height>31</height>
@@ -308,7 +317,7 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>860</x>
+      <x>850</x>
       <y>100</y>
       <width>411</width>
       <height>21</height>
@@ -317,7 +326,7 @@
     <property name="font">
      <font>
       <family>Times New Roman</family>
-      <pointsize>14</pointsize>
+      <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
@@ -331,7 +340,7 @@
      <x>0</x>
      <y>0</y>
      <width>1201</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
